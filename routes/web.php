@@ -16,7 +16,7 @@ Route::get('/dashboard', function () {
 
 
 route::get('admin/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'admin']);
-route::get('/post', [HomeController::class, 'post'])->middleware(['auth', 'admin']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
