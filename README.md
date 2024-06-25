@@ -21,4 +21,7 @@ php artisan migrate
 Install Yajra Data Tables
 composer require yajra/laravel-datatables-oracle
 
+To run app
+php artisan serve
+
 PS: After registered, to access admin page you need to manually edit the user_type field to database change to admin
