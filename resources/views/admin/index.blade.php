@@ -9,12 +9,30 @@
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
+<style>
+    .slow-animation-show {
+        animation: swal2-show 1s;
+    }
+
+    .slow-animation-hide {
+        animation: swal2-hide 1s;
+    }
+
+    /* .swal2-modal {
+        background-color: rgba(63, 255, 106, 0.69) !important;
+        border: 3px solid white;
+        position: relative !important;
+        top: 100px !important;
+    } */
+</style>
+
 
 <div class="container">
     <div class="card mt-5">
         <h2 class="card-header"><i class="fa-regular fa-credit-card"></i> Laravel Exam</h2>
         <div class="card-body">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+
                 <button type="submit" name="action" value="add" class="btn btn-success btn-sm" href="javascript:void(0)" id="createNewUser"> <i class="fa fa-plus"></i> Create New User</button>
             </div>
 
@@ -116,7 +134,6 @@
                         <div class="col-sm-12">
                             <button type="submit" class="col-sm-12 btn btn-success mt-2" id="saveBtn" value="create"><i class="fa fa-save"></i> Submit
                             </button>
-
                         </div>
 
                     </div>
@@ -150,6 +167,93 @@
 
 
 
+
+<script type="module">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var table = $('.data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('admin.index') }}",
+        columns: [{
+                data: 'id',
+                name: 'id'
+            },
+
+            {
+                data: 'firstName',
+                name: 'firstName'
+            },
+            {
+                data: 'lastName',
+                name: 'lastName'
+            },
+            {
+                data: 'contactNumber',
+                name: 'contactNumber'
+            },
+            {
+                data: 'age',
+                name: 'age'
+            },
+            {
+                data: 'gender',
+                name: 'gender'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
+
+    $('#createNewUser').click(function() {
+        index();
+    });
+
+
+
+    $('body').on('click', '.showUser', function() {
+
+        var user_id = $(this).data('id');
+
+        showUser(user_id, "{{ route('admin.index') }}");
+
+    });
+
+    $('body').on('click', '.editUser', function() {
+        var user_id = $(this).data('id');
+
+
+        editUser(user_id, "{{ route('admin.index') }}");
+
+    });
+
+    $('#userForm').submit(function(e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        store(formData, "{{ route('admin.store') }}", table);
+
+
+
+    });
+
+    $('body').on('click', '.deleteUser', function() {
+
+        var user_id = $(this).data("id");
+
+        deleteUser(user_id, "{{ route('admin.store') }}", table);
+
+
+    });
+</script>
+
 <script type="text/javascript">
     $(function() {
 
@@ -158,206 +262,206 @@
          Pass Header Token
          --------------------------------------------
          --------------------------------------------*/
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        // $.ajaxSetup({
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     }
+        // });
 
         /*------------------------------------------
         --------------------------------------------
         Render DataTable
         --------------------------------------------
         --------------------------------------------*/
-        var table = $('.data-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('admin.index') }}",
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
+        // var table = $('.data-table').DataTable({
+        //     processing: true,
+        //     serverSide: true,
+        //     ajax: "{{ route('admin.index') }}",
+        //     columns: [{
+        //             data: 'id',
+        //             name: 'id'
+        //         },
 
-                {
-                    data: 'firstName',
-                    name: 'firstName'
-                },
-                {
-                    data: 'lastName',
-                    name: 'lastName'
-                },
-                {
-                    data: 'contactNumber',
-                    name: 'contactNumber'
-                },
-                {
-                    data: 'age',
-                    name: 'age'
-                },
-                {
-                    data: 'gender',
-                    name: 'gender'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
-            ]
-        });
+        //         {
+        //             data: 'firstName',
+        //             name: 'firstName'
+        //         },
+        //         {
+        //             data: 'lastName',
+        //             name: 'lastName'
+        //         },
+        //         {
+        //             data: 'contactNumber',
+        //             name: 'contactNumber'
+        //         },
+        //         {
+        //             data: 'age',
+        //             name: 'age'
+        //         },
+        //         {
+        //             data: 'gender',
+        //             name: 'gender'
+        //         },
+        //         {
+        //             data: 'action',
+        //             name: 'action',
+        //             orderable: false,
+        //             searchable: false
+        //         },
+        //     ]
+        // });
 
         /*------------------------------------------
         --------------------------------------------
         Click to Button
         --------------------------------------------
         --------------------------------------------*/
-        $('#createNewUser').click(function() {
-            $('#saveBtn').val("create-user");
-            $('#user_id').val('');
-            $('#userForm').trigger("reset");
-            $('#modelHeading').html("<i class='fa fa-plus'></i> Create New User");
-            $('#saveBtn').html('Submit')
-            $('#ajaxModel').modal('show');
-        });
+        // $('#createNewUser').click(function() {
+        //     $('#saveBtn').val("create-user");
+        //     $('#user_id').val('');
+        //     $('#userForm').trigger("reset");
+        //     $('#modelHeading').html("<i class='fa fa-plus'></i> Create New User");
+        //     $('#saveBtn').html('Submit')
+        //     $('#ajaxModel').modal('show');
+        // });
 
         /*------------------------------------------
         --------------------------------------------
         Click to Edit Button
         --------------------------------------------
         --------------------------------------------*/
-        $('body').on('click', '.showUser', function() {
-            var user_id = $(this).data('id');
-            $.get("{{ route('admin.index') }}" + '/' + user_id, function(data) {
-                $('#showModel').modal('show');
+        // $('body').on('click', '.showUser', function() {
+        //     var user_id = $(this).data('id');
+        //     $.get("{{ route('admin.index') }}" + '/' + user_id, function(data) {
+        //         $('#showModel').modal('show');
 
-                $('.first-name').text(data.firstName);
-                $('.last-name').text(data.lastName);
+        //         $('.first-name').text(data.firstName);
+        //         $('.last-name').text(data.lastName);
 
-            })
-        });
+        //     })
+        // });
 
         /*------------------------------------------
         --------------------------------------------
         Click to Edit Button
         --------------------------------------------
         --------------------------------------------*/
-        $('body').on('click', '.editUser', function() {
-            var user_id = $(this).data('id');
-            $.get("{{ route('admin.index') }}" + '/' + user_id + '/edit', function(data) {
-                $('#modelHeading').html("<i class='fa-regular fa-pen-to-square'></i> Edit User");
-                $('#saveBtn').val("edit-user");
+        // $('body').on('click', '.editUser', function() {
+        //     var user_id = $(this).data('id');
+        //     $.get("{{ route('admin.index') }}" + '/' + user_id + '/edit', function(data) {
+        //         $('#modelHeading').html("<i class='fa-regular fa-pen-to-square'></i> Edit User");
+        //         $('#saveBtn').val("edit-user");
 
-                $('#ajaxModel').modal('show');
-                $('#user_id').val(data.id);
-                $('#firstName').val(data.firstName);
-                $('#lastName').val(data.lastName);
-                $('#contactNumber').val(data.contactNumber);
-                $('#age').val(data.age);
-                $('#gender').val(data.gender);
-                $('#email').val(data.email);
-                $('#password').val(data.password);
-                $('#saveBtn').html('Save Changes')
-            })
-        });
+        //         $('#ajaxModel').modal('show');
+        //         $('#user_id').val(data.id);
+        //         $('#firstName').val(data.firstName);
+        //         $('#lastName').val(data.lastName);
+        //         $('#contactNumber').val(data.contactNumber);
+        //         $('#age').val(data.age);
+        //         $('#gender').val(data.gender);
+        //         $('#email').val(data.email);
+        //         $('#password').val(data.password);
+        //         $('#saveBtn').html('Save Changes')
+        //     })
+        // });
 
-        $('#userForm').submit(function(e) {
-            e.preventDefault();
+        // $('#userForm').submit(function(e) {
+        //     e.preventDefault();
 
-            let formData = new FormData(this);
+        //     let formData = new FormData(this);
 
-            if ($('#saveBtn').text() === 'Save Changes') {
-                $('#saveBtn').html('Updating...');
-            } else {
-                $('#saveBtn').html('Sending...');
-            }
+        //     if ($('#saveBtn').text() === 'Save Changes') {
+        //         $('#saveBtn').html('Updating...');
+        //     } else {
+        //         $('#saveBtn').html('Sending...');
+        //     }
 
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": true,
-                "progressBar": true,
-                "positionClass": "toast-top-center",
-                "preventDuplicates": true,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "3000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
+        //     toastr.options = {
+        //         "closeButton": true,
+        //         "debug": false,
+        //         "newestOnTop": true,
+        //         "progressBar": true,
+        //         "positionClass": "toast-top-center",
+        //         "preventDuplicates": true,
+        //         "onclick": null,
+        //         "showDuration": "300",
+        //         "hideDuration": "1000",
+        //         "timeOut": "3000",
+        //         "extendedTimeOut": "1000",
+        //         "showEasing": "swing",
+        //         "hideEasing": "linear",
+        //         "showMethod": "fadeIn",
+        //         "hideMethod": "fadeOut"
+        //     };
 
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('admin.store') }}",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: (response) => {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: "{{ route('admin.store') }}",
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         success: (response) => {
 
-                    if ($('#saveBtn').text() === 'Updating...') {
-                        toastr.success('Successfully Updated');
-                        console.log('Successfully Updated');
-                    } else {
-                        toastr.success(response.message);
-                        console.log('Successfully Added');
-                        console.log($('#saveBtn').text());
-                    }
-
-
-
-                    $('#saveBtn').html('Submit');
-                    $('#userForm').trigger("reset");
-                    $('#ajaxModel').modal('hide');
-                    table.draw();
+        //             if ($('#saveBtn').text() === 'Updating...') {
+        //                 toastr.success('Successfully Updated');
+        //                 console.log('Successfully Updated');
+        //             } else {
+        //                 toastr.success(response.message);
+        //                 console.log('Successfully Added');
+        //                 console.log($('#saveBtn').text());
+        //             }
 
 
-                    $(".print-error-msg").css('display', 'none')
 
-                },
-                error: function(response) {
-
-                    if (response.status === 422) {
-                        let errors = response.responseJSON.errors;
-
-                        $.each(errors, function(key, value) {
+        //             $('#saveBtn').html('Submit');
+        //             $('#userForm').trigger("reset");
+        //             $('#ajaxModel').modal('hide');
+        //             table.draw();
 
 
-                            toastr.error(value[0]);
-                        });
+        //             $(".print-error-msg").css('display', 'none')
 
-                    }
-                    $('#saveBtn').html('Submit');
-                    $('#userForm').find(".print-error-msg").find("ul").html('');
-                    $('#userForm').find(".print-error-msg").css('display', 'block');
-                    $.each(response.responseJSON.errors, function(key, value) {
-                        $('#userForm').find(".print-error-msg").find("ul").append('<li>' + value + '</li>');
-                    });
-                }
-            });
+        //         },
+        //         error: function(response) {
 
-        });
+        //             if (response.status === 422) {
+        //                 let errors = response.responseJSON.errors;
+
+        //                 $.each(errors, function(key, value) {
 
 
-        $('body').on('click', '.deleteUser', function() {
+        //                     toastr.error(value[0]);
+        //                 });
 
-            var user_id = $(this).data("id");
-            confirm("Are You sure want to delete?");
+        //             }
+        //             $('#saveBtn').html('Submit');
+        //             $('#userForm').find(".print-error-msg").find("ul").html('');
+        //             $('#userForm').find(".print-error-msg").css('display', 'block');
+        //             $.each(response.responseJSON.errors, function(key, value) {
+        //                 $('#userForm').find(".print-error-msg").find("ul").append('<li>' + value + '</li>');
+        //             });
+        //         }
+        //     });
 
-            $.ajax({
-                type: "DELETE",
-                url: "{{ route('admin.store') }}" + '/' + user_id,
-                success: function(data) {
-                    table.draw();
-                },
-                error: function(data) {
-                    console.log('Error:', data);
-                }
-            });
-        });
+        // });
+
+
+        // $('body').on('click', '.deleteUser', function() {
+
+        //     var user_id = $(this).data("id");
+        //     confirm("Are You sure want to delete?");
+
+        //     $.ajax({
+        //         type: "DELETE",
+        //         url: "{{ route('admin.store') }}" + '/' + user_id,
+        //         success: function(data) {
+        //             table.draw();
+        //         },
+        //         error: function(data) {
+        //             console.log('Error:', data);
+        //         }
+        //     });
+        // });
 
     });
 </script>
